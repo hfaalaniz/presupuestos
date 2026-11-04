@@ -1,0 +1,17 @@
+{
+  "name": "presupuestos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply presupuestos --local",
+    "db:remote": "wrangler d1 migrations apply presupuestos --remote",
+    "user:add": "node scripts/user-add.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.157.0"
+  }
+}
