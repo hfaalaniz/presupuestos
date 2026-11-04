@@ -8,6 +8,20 @@ test('totales con IVA e ítem sin precio', () => {
   assert.deepEqual([t.neto, t.iva, t.total, t.miss], [2360, 495.6, 2855.6, [1]]);
   assert.match(leadTxt(s), /con IVA, sin incluir el ítem 1\.$/);
 });
+test('descuento en porcentaje antes del IVA', () => {
+  const t = totals({ iva: '21', desc: '10', items: [{ q: '1', p: '' }, { q: '2', p: '500' }] });
+  assert.deepEqual([t.neto, t.pct, t.desc, t.base, t.iva, t.total], [1000, 10, 100, 900, 189, 1089]);
+});
+test('descuento sin IVA discriminado y con decimales', () => {
+  const t = totals({ iva: '0', desc: '12.5', items: [{ q: '3', p: '33.33' }] });
+  assert.deepEqual([t.neto, t.desc, t.base, t.iva, t.total], [99.99, 12.5, 87.49, 0, 87.49]);
+});
+test('descuento vacío, negativo o mayor que 100', () => {
+  const it = [{ q: '1', p: '200' }];
+  assert.equal(totals({ iva: '0', items: it }).total, 200);
+  assert.equal(totals({ iva: '0', desc: '-5', items: it }).total, 200);
+  assert.equal(totals({ iva: '21', desc: '150', items: it }).total, 0);
+});
 test('sin IVA discriminado', () => {
   assert.equal(totals({ iva: '0', items: [{ q: '1', p: '100' }] }).total, 100);
 });

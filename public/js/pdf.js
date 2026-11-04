@@ -1,4 +1,4 @@
-import { condTxt, dateLong, dateObj, isNum, leadTxt, missTxt, money, sub, totals } from './calc.js';
+import { condTxt, dateLong, dateObj, isNum, leadTxt, missTxt, money, pctTxt, sub, totals } from './calc.js';
 
 export function buildPdf(s) {
   const J = window.jspdf && window.jspdf.jsPDF;
@@ -57,6 +57,10 @@ export function buildPdf(s) {
   h2('Detalle de precios'); y += 1;
   const suf = t.miss.length ? ` (sin ${missTxt(t.miss)})` : '';
   const foot = [[{ content: (t.rate ? 'Subtotal sin IVA' : 'Subtotal') + suf, colSpan: 5, styles: { halign: 'right' } }, money(t.neto)]];
+  if (t.pct) {
+    foot.push([{ content: `Descuento ${pctTxt(t.pct)}`, colSpan: 5, styles: { halign: 'right' } }, `-${money(t.desc)}`]);
+    foot.push([{ content: `Subtotal con descuento${suf}`, colSpan: 5, styles: { halign: 'right' } }, money(t.base)]);
+  }
   if (t.rate) foot.push([{ content: `IVA ${String(t.rate).replace('.', ',')} %`, colSpan: 5, styles: { halign: 'right' } }, money(t.iva)]);
   foot.push([{ content: `${t.rate ? 'Total con IVA' : 'Total'}${suf} (USD)`, colSpan: 5, styles: { halign: 'right', fontSize: 10.5 } }, { content: money(t.total), styles: { fontSize: 10.5 } }]);
   tbl({

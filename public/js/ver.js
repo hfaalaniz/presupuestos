@@ -1,5 +1,5 @@
 // Vista pública del presupuesto que recibe el cliente. Solo lectura.
-import { condTxt, dateLong, dateObj, isNum, leadTxt, missTxt, money, sub, totals } from './calc.js';
+import { condTxt, dateLong, dateObj, isNum, leadTxt, missTxt, money, pctTxt, sub, totals } from './calc.js';
 import { buildPdf } from './pdf.js';
 import { esc, fileBase, saveBlob } from './ui.js';
 
@@ -28,7 +28,7 @@ function render(s) {
       <section><h2>Datos del presupuesto</h2><div>${data}</div></section>
       ${s.intro || s.alcance.length ? `<section><h2>Objeto y alcance</h2>${s.intro ? `<p>${nl(s.intro)}</p>` : ''}<div>${s.alcance.map((a) => `<div class="pair ro"><div class="lbl">${nl(a.l)}</div><div>${nl(a.t)}</div></div>`).join('')}</div></section>` : ''}
       <section><h2>Detalle de precios</h2><p class="small">Precios en dólares estadounidenses (USD).</p><div class="rows"><div class="r ro hd"><div class="n">N.º</div><div>Descripción</div><div class="num">Cant.</div><div>Unidad</div><div class="num">Precio unit.</div><div class="num">Subtotal</div></div>${rows}</div>
-        <div class="tot"><div><span>${t.rate ? 'Subtotal sin IVA' : 'Subtotal'}${esc(suf)}</span><span class="v">USD ${money(t.neto)}</span></div>${t.rate ? `<div><span>IVA ${String(t.rate).replace('.', ',')} %</span><span class="v">USD ${money(t.iva)}</span></div>` : ''}<div class="grand"><span>${t.rate ? 'Total con IVA' : 'Total'}${esc(suf)}</span><span class="v">USD ${money(t.total)}</span></div></div></section>
+        <div class="tot"><div><span>${t.rate ? 'Subtotal sin IVA' : 'Subtotal'}${esc(suf)}</span><span class="v">USD ${money(t.neto)}</span></div>${t.pct ? `<div><span>Descuento ${pctTxt(t.pct)}</span><span class="v">− USD ${money(t.desc)}</span></div><div><span>Subtotal con descuento${esc(suf)}</span><span class="v">USD ${money(t.base)}</span></div>` : ''}${t.rate ? `<div><span>IVA ${String(t.rate).replace('.', ',')} %</span><span class="v">USD ${money(t.iva)}</span></div>` : ''}<div class="grand"><span>${t.rate ? 'Total con IVA' : 'Total'}${esc(suf)}</span><span class="v">USD ${money(t.total)}</span></div></div></section>
       ${s.exclIntro || s.noIncl.length || s.cargo.length ? `<section><h2>Exclusiones y requisitos</h2>${s.exclIntro ? `<p>${nl(s.exclIntro)}</p>` : ''}<div class="cols"><div><h3>No incluido</h3>${bullets(s.noIncl)}</div><div><h3>A cargo del cliente</h3>${bullets(s.cargo)}</div></div></section>` : ''}
       <section><h2>Condiciones comerciales</h2><div>${s.cond.map((c) => `<div class="pair ro"><div class="lbl">${nl(c.l)}</div><div>${nl(condTxt(s, c))}</div></div>`).join('')}</div></section>
       <section><h2>Aceptación</h2><p>${nl(s.acept)}</p></section>

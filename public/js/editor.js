@@ -92,6 +92,8 @@ export class Editor {
         <div class="r hd"><div class="n">N.º</div><div>Descripción</div><div class="num">Cant.</div><div>Unidad</div><div class="num">Precio unit.</div><div class="num">Subtotal</div><span></span></div>${rows}</div>
         <button type="button" class="add" data-add="items">Agregar ítem</button>
         <div class="tot"><div><span id="t-neto-l"></span><span class="v" id="t-neto"></span></div>
+        <div><label for="f-desc">Descuento ${fi('desc', s.desc, '0', 'opt pct', ' type="number" min="0" max="100" step="0.5"')} %</label><span class="v" id="t-desc"></span></div>
+        <div id="t-base-r"><span id="t-base-l"></span><span class="v" id="t-base"></span></div>
         <div><label for="iva">IVA <select id="iva" data-k="iva"><option value="21">21 %</option><option value="10.5">10,5 %</option><option value="0">No discriminar (monotributo)</option></select></label><span class="v" id="t-iva"></span></div>
         <div class="grand"><span id="t-total-l"></span><span class="v" id="t-total"></span></div></div></section>
       <section><h2>Exclusiones y requisitos</h2>${ta('exclIntro', s.exclIntro, 'Texto', '', 'Introducción de exclusiones')}<div class="cols"><div><h3>No incluido</h3>${list('noIncl')}</div><div><h3>A cargo del cliente</h3>${list('cargo')}</div></div></section>
@@ -116,6 +118,10 @@ export class Editor {
     q('#lead').textContent = leadTxt(s);
     q('#t-neto-l').textContent = (t.rate ? 'Subtotal sin IVA' : 'Subtotal') + suf;
     q('#t-neto').textContent = `USD ${money(t.neto)}`;
+    q('#t-desc').textContent = t.pct ? `− USD ${money(t.desc)}` : '—';
+    q('#t-base-r').hidden = !t.pct;
+    q('#t-base-l').textContent = `Subtotal con descuento${suf}`;
+    q('#t-base').textContent = `USD ${money(t.base)}`;
     q('#t-iva').textContent = t.rate ? `USD ${money(t.iva)}` : '—';
     q('#t-total-l').textContent = (t.rate ? 'Total con IVA' : 'Total') + suf;
     q('#t-total').textContent = `USD ${money(t.total)}`;

@@ -11,10 +11,15 @@ export function totals(s) {
     if (v === null) miss.push(i + 1); else neto += v;
   });
   neto = Math.round(neto * 100) / 100;
+  // Descuento en porcentaje sobre el subtotal; el IVA se calcula sobre lo que queda.
+  const pct = Math.min(100, Math.max(0, Number(s.desc) || 0));
+  const desc = Math.round(neto * pct) / 100;
+  const base = Math.round((neto - desc) * 100) / 100;
   const rate = Number(s.iva) || 0;
-  const iva = Math.round(neto * rate) / 100;
-  return { neto, iva, total: Math.round((neto + iva) * 100) / 100, miss, rate };
+  const iva = Math.round(base * rate) / 100;
+  return { neto, pct, desc, base, iva, total: Math.round((base + iva) * 100) / 100, miss, rate };
 }
+export const pctTxt = (n) => `${String(n).replace('.', ',')} %`;
 export const missTxt = (m) => (m.length === 0 ? '' : m.length === 1 ? `ítem ${m[0]}` : `ítems ${m.join(', ')}`);
 export function leadTxt(s) {
   const t = totals(s);
@@ -106,7 +111,7 @@ export function blankBudget(last) {
     numero: '', fecha: todayIso(), validez: l.validez ?? 15,
     cliente: '', clienteCuit: '', lugar: '', clienteTel: '', clienteEmail: '',
     titulo: '', subtitulo: '', intro: '', alcance: [],
-    items: [{ d: '', q: '1', u: 'global', p: '' }], iva: l.iva ?? '21',
+    items: [{ d: '', q: '1', u: 'global', p: '' }], iva: l.iva ?? '21', desc: '',
     exclIntro: '', noIncl: [], cargo: [],
     cond: l.cond ? JSON.parse(JSON.stringify(l.cond)) : defaultConds(),
     acept: l.acept || 'La firma de este presupuesto o la orden de compra confirman la aceptación del alcance y de las condiciones.',

@@ -26,6 +26,7 @@ export const trapezoide = () => ({
     { d: 'Documentación y capacitación de operadores', q: '12', u: 'h', p: '30' },
   ],
   iva: '21',
+  desc: '',
   exclIntro: 'La oferta no incluye los equipos de potencia ni las tareas de instalación ajenas a la consola y a la red de comunicación.',
   noIncl: ['Variadores iG5A, motores, reductores y mecánica.', 'Tableros de potencia, protecciones y cableado de fuerza.', 'PC o equipo donde se ejecute la aplicación.', 'Viáticos, traslados y alojamiento fuera de Córdoba.', 'Cambios de alcance posteriores a la aceptación.'],
   cargo: ['Variadores instalados y energizados, con sus bornes RS-485 accesibles.', 'Circuito de parada de emergencia y seguridades de la máquina.', 'Acceso a la planta y un responsable técnico durante la puesta en marcha.'],
